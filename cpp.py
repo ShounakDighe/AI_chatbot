@@ -81,7 +81,7 @@ sleep_command = "exit"
 listening = False 
 while True:
     command = take_command()
-    
+
     if listening:
         if 'play' in command:
             song = command.replace('play', '')
@@ -155,18 +155,13 @@ while True:
             sleep(10)
             os.system("shutdown -r +1")
 
+        elif sleep_command in command.lower():
+            speak("Going to sleep. Wake me up when you need assistance.")
+            listening = False
 
         else:
-            speak('Sorry,can you repeat it again!!')
-
-            
-    # Check for the wake-up command
+            speak('Sorry,can you repeat it again!!')  
+    
     if wakeup_command in command.lower():
         speak("Hello Shounak, how can I help you?")
-        listening = True
-        
-    # Check for the sleep command
-    if sleep_command in command.lower():
-        speak("Going to sleep. Wake me up when you need assistance.")
-        listening = False
-        
+        listening = True                 
