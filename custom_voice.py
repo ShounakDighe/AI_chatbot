@@ -2,7 +2,7 @@ import os
 import pygame
 
 def speak(data):
-    voice = 'hi-IN-SwaraNeural'
+    voice = "en-GB-SoniaNeural"    
     command = f'edge-tts --voice "{voice}" --text "{data}" --write-media "data.mp3"'
     os.system(command)
 

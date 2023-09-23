@@ -5,11 +5,12 @@ import pywhatkit
 import wikipedia
 import pyjokes
 import webbrowser
-import python_weather
 import os
 import smtplib
 import sys
+import dbus
 from time import sleep
+import subprocess
 sys.path.append('/home/shounak/Documents/Fundamentals-of-ds/c_programs')
 
 from AI_chatbot.custom_voice import speak
@@ -19,7 +20,7 @@ engine = gTTS(text="Hello, I am ACE", lang="en", slow=False)
 recognizer = sr.Recognizer()
 
 with sr.Microphone() as source:
-    recognizer.adjust_for_ambient_noise(source)
+    recognizer.adjust_for_ambient_noise(source, duration=0.5)
 
 
 
@@ -47,12 +48,22 @@ def wishme():
     else:
         speak("Good Evening!")
 
+def play_spotify_playlist():
+    try:
+        subprocess.run(["spotify", "--uri", "https://open.spotify.com/playlist/2L8OHyMte0Msmt78ifX2SU?si=4fc854915d5b48d5"])
+        speak("Playing the Spotify playlist.")
+    except Exception as e:
+        speak("An error occurred while trying to play the playlist.")
+
+
+    except Exception as e:
+        speak("An error occurred while trying to play the playlist.")
 
 wishme()
 speak(" Hello Shounak,How can I help you ? ")
 
 wakeup_command = "hey man"
-sleep_command = "sleep"
+sleep_command = "exit"
 listening = False 
 while True:
     command = take_command()
@@ -69,10 +80,15 @@ while True:
 
         elif 'wikipedia' in command:
             speak("Searching...")
-            command = command.replace('wikipedia', '')
-            info = wikipedia.summary(command, sentences=2)
-            print(info)
-            speak(info)
+            query = command.replace('wikipedia', '')
+            try:
+                info = wikipedia.summary(query, sentences=2)
+                print(info)
+                speak(info)
+            except wikipedia.exceptions.PageError:
+                speak(f"Sorry, I couldn't find any information about {query} on Wikipedia.")
+            except wikipedia.exceptions.DisambiguationError as e:
+                speak(f"Multiple results found for {query}. Please specify your search.")
 
         elif 'date' in command:
             current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -88,19 +104,9 @@ while True:
             joke = pyjokes.get_joke()
             speak(joke)
 
-        elif 'weather' in command:
-            speak("Please provide the name of the city")
-            city = take_command()
-            weather = python_weather.weather.Weather(unit='C')
-            location = weather.lookup_by_location(city)
-            condition = location.condition.text
-            temperature = location.condition.temp
-            speak(f"The weather in {city} is currently {condition} with a temperature of {temperature} degrees Celsius.")
-        
         elif 'spotify' in command:    
-            playlist_uri = 'https://open.spotify.com/playlist/4q52Yjq4F0ZACxwJx6XxnU?si=89080a3b0db34a68'
-    
-            os.system(f'spotify --uri {playlist_uri}')
+            play_spotify_playlist()
+
     
         elif 'open note' in command:
             speak("Just a sec opening gedit")
@@ -109,10 +115,10 @@ while True:
             os.system("pkill gedit")
             speak("Gedit is closed")
     
-        elif 'open code' in command:
+        elif 'open v s' in command:
             speak("Just a sec openning Visual Studio Code")
             os.system("code")
-        elif 'close code' in command:
+        elif 'close v s' in command:
             os.system("pkill code")
             speak("Visual Studio Code is closed")
 
@@ -121,19 +127,19 @@ while True:
             webbrowser.open(website)
 
 
-        elif 'exit' in command:
+        elif 'finish' in command:
             speak("Goodbye!")
             sys.exit()
 
         elif 'shutdown' in command:
             speak('Logging out in 10 second')
             sleep(10)
-            os.system("shutdown /s /t 1")
+            os.system("shutdown -h +1")
 
         elif 'restart' in command:
             speak('Restarting out in 10 second')
             sleep(10)
-            os.system("shutdown /r /t 1")
+            os.system("shutdown -r +1")
 
 
         else:
