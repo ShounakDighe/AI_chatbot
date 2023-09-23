@@ -1,3 +1,4 @@
+# Imported lib from the pip 
 import datetime
 import speech_recognition as sr
 from gtts import gTTS
@@ -6,14 +7,25 @@ import wikipedia
 import pyjokes
 import webbrowser
 import os
-import smtplib
 import sys
-import dbus
 from time import sleep
 import subprocess
+from colorama import init, Fore, Style
+init(autoreset=True)
+
 sys.path.append('/home/shounak/Documents/Fundamentals-of-ds/c_programs')
 
 from AI_chatbot.custom_voice import speak
+
+def animate_text(text):
+    colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.MAGENTA, Fore.CYAN]
+    styles = [Style.NORMAL, Style.BRIGHT]
+    
+    for style in styles:
+        for color in colors:
+            print(f"{style}{color}{text}")
+
+
 
 engine = gTTS(text="Hello, I am ACE", lang="en", slow=False)
 
@@ -39,14 +51,16 @@ def take_command():
         pass
     return ""
 
+animate_text("Hello, I am ACE")
+
 def wishme():
     hour = datetime.datetime.now().hour
     if 0 <= hour < 12:
-        speak("Good Morning!")
+        speak("Welcome back Shounak Sir, Good Morning!")
     elif 12 <= hour < 18:
-        speak("Good Afternoon!")
+        speak("Welcome back Shounak Sir, Good Afternoon!")
     else:
-        speak("Good Evening!")
+        speak("Welcome back Shounak Sir, Good Evening!")
 
 def play_spotify_playlist():
     try:
@@ -60,7 +74,7 @@ def play_spotify_playlist():
         speak("An error occurred while trying to play the playlist.")
 
 wishme()
-speak(" Hello Shounak,How can I help you ? ")
+speak("Say 'hey man' to wake me up.")
 
 wakeup_command = "hey man"
 sleep_command = "exit"
