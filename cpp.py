@@ -14,7 +14,7 @@ sys.path.append('/home/shounak/Documents/Fundamentals-of-ds/c_programs')
 
 from AI_chatbot.custom_voice import speak
 
-engine = gTTS(text="Hello, I am an ACE", lang="en", slow=False)
+engine = gTTS(text="Hello, I am ACE", lang="en", slow=False)
 
 recognizer = sr.Recognizer()
 
@@ -47,109 +47,106 @@ def wishme():
     else:
         speak("Good Evening!")
 
-    speak("I am ACE ")
-wishme()
-speak("How can I help you ? ")
 
+wishme()
+speak(" Hello Shounak,How can I help you ? ")
+
+wakeup_command = "hey man"
+sleep_command = "sleep"
+listening = False 
 while True:
     command = take_command()
     
-    if 'play' in command:
-        song = command.replace('play', '')
-        speak('playing ' + song)
-        pywhatkit.playonyt(song)
+    if listening:
+        if 'play' in command:
+            song = command.replace('play', '')
+            speak('playing ' + song)
+            pywhatkit.playonyt(song)
     
-    elif 'time' in command:
-        time = datetime.datetime.now().strftime('%I:%M %p')
-        speak('Current time is ' + time)
+        elif 'time' in command:
+            time = datetime.datetime.now().strftime('%I:%M %p')
+            speak('Current time is ' + time)
+
+        elif 'wikipedia' in command:
+            speak("Searching...")
+            command = command.replace('wikipedia', '')
+            info = wikipedia.summary(command, sentences=2)
+            print(info)
+            speak(info)
+
+        elif 'date' in command:
+            current_date = datetime.datetime.now().strftime("%Y-%m-%d")
+            speak(f'Today is {current_date}')
+
+        elif 'who are you' in command:
+            speak('I am an Artificial Conversation entity and I was developed by MANAS , SHOUNAK , YASHVARDHAN  , SIDDESH  ')
+
+        elif 'are you single' in command:
+            speak('I am in a relationship with wifi')
+
+        elif 'joke' in command:
+            joke = pyjokes.get_joke()
+            speak(joke)
+
+        elif 'weather' in command:
+            speak("Please provide the name of the city")
+            city = take_command()
+            weather = python_weather.weather.Weather(unit='C')
+            location = weather.lookup_by_location(city)
+            condition = location.condition.text
+            temperature = location.condition.temp
+            speak(f"The weather in {city} is currently {condition} with a temperature of {temperature} degrees Celsius.")
+        
+        elif 'spotify' in command:    
+            playlist_uri = 'https://open.spotify.com/playlist/4q52Yjq4F0ZACxwJx6XxnU?si=89080a3b0db34a68'
     
-    elif 'wikipedia' in command:
-        speak("Searching...")
-        command = command.replace('wikipedia', '')
-        info = wikipedia.summary(command, sentences=2)
-        print(info)
-        speak(info)
-
-    elif 'date' in command:
-        current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-        speak(f'Today is {current_date}')
-
-    elif 'who are you' in command:
-        speak('I am an Artificial Conversation entity and I was developed by MANAS , SHOUNAK , YASHVARDHAN  , SIDDESH  ')
+            os.system(f'spotify --uri {playlist_uri}')
     
-    elif 'are you single' in command:
-        speak('I am in a relationship with wifi')
-
-    elif 'joke' in command:
-        joke = pyjokes.get_joke()
-        speak(joke)
-
-   
+        elif 'open note' in command:
+            speak("Just a sec opening gedit")
+            os.system("gedit &")
+        elif 'close note' in command:
+            os.system("pkill gedit")
+            speak("Gedit is closed")
     
-    
-    elif 'weather' in command:
-        speak("Please provide the name of the city")
-        city = take_command()
-        weather = python_weather.weather.Weather(unit='C')
-        location = weather.lookup_by_location(city)
-        condition = location.condition.text
-        temperature = location.condition.temp
-        speak(f"The weather in {city} is currently {condition} with a temperature of {temperature} degrees Celsius.")
-    
-    elif 'spotify' in command:    
-        playlist_uri = 'https://open.spotify.com/playlist/4q52Yjq4F0ZACxwJx6XxnU?si=89080a3b0db34a68'
+        elif 'open code' in command:
+            speak("Just a sec openning Visual Studio Code")
+            os.system("code")
+        elif 'close code' in command:
+            os.system("pkill code")
+            speak("Visual Studio Code is closed")
 
-        os.system(f'spotify --uri {playlist_uri}')
-   
-    elif 'open note' in command:
-        speak("Just a sec opening gedit")
-        os.system("gedit &")
-    elif 'close note' in command:
-        os.system("pkill gedit")
-        speak("Gedit is closed")
+        elif 'open' in command:
+            website = command.replace('open', '')
+            webbrowser.open(website)
 
-    elif 'open code' in command:
-        speak("Just a sec openning Visual Studio Code")
-        os.system("code")
-    elif 'close code' in command:
-        os.system("pkill code")
-        speak("Visual Studio Code is closed")
-    
-    elif 'open' in command:
-        website = command.replace('open', '')
-        webbrowser.open(website)
-    
 
-    elif 'exit' in command:
-        speak("Goodbye!")
-        sys.exit()
+        elif 'exit' in command:
+            speak("Goodbye!")
+            sys.exit()
 
-    elif 'shutdown' in command:
-        speak('Logging out in 10 second')
-        sleep(10)
-        os.system("shutdown /s /t 1")
+        elif 'shutdown' in command:
+            speak('Logging out in 10 second')
+            sleep(10)
+            os.system("shutdown /s /t 1")
 
-    elif 'restart' in command:
-        speak('Restarting out in 10 second')
-        sleep(10)
-        os.system("shutdown /r /t 1")
-    
+        elif 'restart' in command:
+            speak('Restarting out in 10 second')
+            sleep(10)
+            os.system("shutdown /r /t 1")
 
-    else:
-        speak('Sorry,can you repeat it again!!')
 
-        """
-    elif 'send mail' in command:
-        try:
-            speak("what subjects should be mentioned")
-            subject=take_command().lower()
-            speak("what should i say")
-            content=take_command().lower()
-            to="shounakdighe@gmail.com","jadhav.yashvardhan5@gmail.com",
-            print(subject)
-            print(content)
-            send_email(to,content)
-            speak("email has been sent")        
-    """
+        else:
+            speak('Sorry,can you repeat it again!!')
 
-speak("Hi Shounak,how can i help you ? ")
+            
+    # Check for the wake-up command
+    if wakeup_command in command.lower():
+        speak("Hello Shounak, how can I help you?")
+        listening = True
+        
+    # Check for the sleep command
+    if sleep_command in command.lower():
+        speak("Going to sleep. Wake me up when you need assistance.")
+        listening = False
+        
