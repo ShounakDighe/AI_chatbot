@@ -13,12 +13,15 @@ import subprocess
 from playsound import playsound
 from colorama import init, Fore, Style
 import threading
+from bs4 import BeautifulSoup
+import requests
+from pywikihow import search_wikihow
 
 init(autoreset=True)
 
 sys.path.append('/home/shounak/Documents/Fundamentals-of-ds/c_programs')
 
-from AI_chatbot.custom_voice import speak
+from custom_voice import speak
 
 def animate_text(text):
     colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.MAGENTA, Fore.CYAN]
@@ -100,9 +103,25 @@ def listen_for_commands():
             speak('playing ' + song)
             pywhatkit.playonyt(song)
 
+        elif "hey woman" in command:
+            speak("listening sir")
+        
         elif 'time' in command:
             time = datetime.datetime.now().strftime('%I:%M %p')
             speak('Current time is ' + time)
+
+        elif "how to" in command:
+            try:
+                speak("Getting Data...")
+                op = command.replace("mark","")
+                max_result=1
+                how_to=search_wikihow(op,max_result)
+                assert len(how_to)==1
+                how_to[0].print()
+                speak(how_to[0].summary)
+
+            except:
+                speak("Say it correctly")
 
         elif 'wikipedia' in command:
             speak("Searching...")
@@ -115,6 +134,10 @@ def listen_for_commands():
                 speak(f"Sorry, I couldn't find any information about {query} on Wikipedia.")
             except wikipedia.exceptions.DisambiguationError as e:
                 speak(f"Multiple results found for {query}. Please specify your search.")
+        
+        elif 'time' in command:
+            time = datetime.datetime.now().strftime('%I:%M %p')
+            speak('Current time is ' + time)
 
         elif 'date' in command:
             current_date = datetime.datetime.now().strftime("%Y-%m-%d")
@@ -133,6 +156,14 @@ def listen_for_commands():
         elif 'spotify' in command:    
             play_spotify_playlist()
 
+        elif 'open youtube' in command:
+            webbrowser.open("youtube.com")
+        elif 'open google' in command:
+            webbrowser.open("google.com")
+
+        elif 'open github' in command:
+            webbrowser.open("https://github.com")
+
         elif 'open note' in command:
             speak("Just a sec opening gedit")
             os.system("gedit &")
@@ -140,16 +171,68 @@ def listen_for_commands():
             os.system("pkill gedit")
             speak("Gedit is closed")
 
-        elif 'open v s' in command:
+        elif 'open vs code' in command:
             speak("Just a sec openning Visual Studio Code")
             os.system("code")
-        elif 'close v s' in command:
+        elif 'close vs code' in command:
             os.system("pkill code")
             speak("Visual Studio Code is closed")
 
         elif 'open' in command:
             website = command.replace('open', '')
             webbrowser.open(website)
+
+        elif "remind me" in command:
+            rememberMsg = command.replace("remember that","")
+            rememberMsg = rememberMsg.replace("mark","")
+            speak("you tell me to remind:" + rememberMsg)
+            remember = open("data.txt","w")
+            remember.write(rememberMsg)
+            remember.close()
+
+        elif "what do you remember" in command:
+            remember= open("data.txt","r")
+            speak("you tell me to remind"+remember.read())
+
+        elif "news" in command:
+            speak("reading news")
+            try:
+               type=command
+               if type == "business news":
+                   type="https://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=d2705285623b4bfab2c9f1ad9e827687"
+               elif type == "top news" or type == "news":
+                   type="https://newsapi.org/v2/top-headlines?country=in&apiKey=d2705285623b4bfab2c9f1ad9e827687"
+               elif type == "health news":
+                   type="https://newsapi.org/v2/top-headlines?country=in&category=health&apiKey=d2705285623b4bfab2c9f1ad9e827687"
+               elif type == "science news":
+                   type="https://newsapi.org/v2/top-headlines?country=in&category=science&apiKey=d2705285623b4bfab2c9f1ad9e827687"
+               elif type == "sports news":
+                   type="https://newsapi.org/v2/top-headlines?country=in&category=sports&apiKey=d2705285623b4bfab2c9f1ad9e827687"
+               elif type == "technology news":
+                   type="https://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=d2705285623b4bfab2c9f1ad9e827687"      
+               main_news = type
+               news = requests.get(main_news).json()
+               article = news["articles"]
+               news_article = []
+               link=news["articles"]
+               link_url=[]
+               for arti in article:
+                   news_article.append(arti["title"])
+                   link_url.append(arti["url"])
+               for i in range(5):
+                   print(i + 1, news_article[i])
+                   print(link_url[i])
+                   speak(news_article[i])
+            except Exception as e:
+                print(e)
+        
+        elif "temperature" in command:
+            search="tempeature in pune"
+            url=f"https://www.google.com/search?q={search}"
+            r=requests.get(url)
+            data=BeautifulSoup(r.text,"html.parser")
+            temp=data.find("div",class_="BNeawe").text
+            speak(f"{search} is {temp}")
 
         elif 'finish' in command:
             speak("Goodbye!")
