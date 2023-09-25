@@ -2,7 +2,10 @@ import os
 import pygame
 
 def speak(data):
-    voice = "en-GB-SoniaNeural"    
+  
+    voice = "ur-IN-GulNeural"
+
+
     command = f'edge-tts --voice "{voice}" --text "{data}" --write-media "data.mp3"'
     os.system(command)
 
@@ -21,4 +24,6 @@ def speak(data):
     finally:
         pygame.mixer.music.stop()
         pygame.mixer.quit()
+
+
 

@@ -6,7 +6,6 @@ import pywhatkit
 import wikipedia
 import pyjokes
 import webbrowser
-import pyautogui
 import os
 import sys
 from time import sleep
@@ -17,6 +16,7 @@ import threading
 from bs4 import BeautifulSoup
 import requests
 from pywikihow import search_wikihow
+import pyautogui
 
 init(autoreset=True)
 
@@ -85,13 +85,13 @@ def play_spotify_playlist():
         speak("An error occurred while trying to play the playlist.")
 
 wishme()
-speak("Say wake up to wake me up.")
+speak("Say activate to wake me up.")
 
-wakeup_command = "wake up"
+wakeup_command = "activate"
 sleep_command = "exit"
 listening = False 
 
-wakeup_command = "wake up"
+wakeup_command = "activate"
 sleep_command = "exit"
 listening = False 
 
@@ -282,9 +282,11 @@ def listen_for_commands():
             speak("Going to sleep. Wake me up when you need assistance.")
             listening = False
 
-        if wakeup_command in command.lower():
+        elif wakeup_command in command.lower():
             speak("Hello Shounak, how can I help you?")
             listening = True
+
+        
 
 
 if __name__ == "__main__":
