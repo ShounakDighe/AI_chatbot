@@ -84,18 +84,20 @@ def play_spotify_playlist():
         speak("An error occurred while trying to play the playlist.")
 
 wishme()
-speak("Say 'hey man' to wake me up.")
+speak("Say wake up to wake me up.")
 
-wakeup_command = "hey man"
+wakeup_command = "wake up"
 sleep_command = "exit"
 listening = False 
 
-wakeup_command = "hey man"
+wakeup_command = "wake up"
 sleep_command = "exit"
 listening = False 
 
 def listen_for_commands():
     global listening
+    
+
     while True:
         command = take_command()
         if 'play' in command:
@@ -237,7 +239,7 @@ def listen_for_commands():
         elif 'finish' in command:
             speak("Goodbye!")
             sys.exit()
-
+        
         elif 'shutdown' in command:
             speak('Logging out in 10 second')
             sleep(10)
@@ -256,8 +258,10 @@ def listen_for_commands():
             speak("Hello Shounak, how can I help you?")
             listening = True
 
+
 if __name__ == "__main__":
     listen_for_commands()
+
 
 listening_thread = threading.Thread(target=listen_for_commands)
 listening_thread.daemon = True
