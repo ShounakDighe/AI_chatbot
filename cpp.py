@@ -6,6 +6,7 @@ import pywhatkit
 import wikipedia
 import pyjokes
 import webbrowser
+import pyautogui
 import os
 import sys
 from time import sleep
@@ -235,6 +236,33 @@ def listen_for_commands():
             data=BeautifulSoup(r.text,"html.parser")
             temp=data.find("div",class_="BNeawe").text
             speak(f"{search} is {temp}")
+
+        elif "volume up" in command or "increase" in command:
+            pyautogui.press("volumeup")
+
+        elif "volume down" in command or "decrease" in command:
+                pyautogui.press("volumedown")
+
+        elif "volume mute" in command or "mute" in command:
+                pyautogui.press("volumemute")
+
+        elif "pause video" in command:
+                pyautogui.press("k")
+
+        elif "start" in command:
+                pyautogui.press("k")
+
+        elif "last" in command:
+                pyautogui.press("shift" + "p")
+
+        elif "next" in command:
+                pyautogui.press("end")
+
+        elif "forward" in command:
+                pyautogui.press("right")
+
+        elif "backward" in command:
+            pyautogui.press("left")
 
         elif 'finish' in command:
             speak("Goodbye!")
