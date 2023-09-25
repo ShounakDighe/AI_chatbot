@@ -10,7 +10,10 @@ import os
 import sys
 from time import sleep
 import subprocess
+from playsound import playsound
 from colorama import init, Fore, Style
+import threading
+
 init(autoreset=True)
 
 sys.path.append('/home/shounak/Documents/Fundamentals-of-ds/c_programs')
@@ -25,7 +28,7 @@ def animate_text(text):
         for color in colors:
             print(f"{style}{color}{text}")
 
-
+thread_lock = threading.Lock()
 
 engine = gTTS(text="Hello, I am ACE", lang="en", slow=False)
 
@@ -38,13 +41,14 @@ with sr.Microphone() as source:
 
 def take_command():
     try:
-        with sr.Microphone() as source:
+        with sr.Microphone() as source:            
             print("Listening...")
             audio = recognizer.listen(source)
-            print("Recognizing...")
+            print("Recognizing")
             command = recognizer.recognize_google(audio, language="en-IN")
             print("User said:", command)
-            return command.lower()
+            with thread_lock:
+                return command.lower()
     except sr.WaitTimeoutError:
         pass
     except sr.UnknownValueError:
@@ -56,10 +60,13 @@ animate_text("Hello, I am ACE")
 def wishme():
     hour = datetime.datetime.now().hour
     if 0 <= hour < 12:
+        playsound("/home/shounak/Downloads/Startup Sound.mp3")
         speak("Welcome back Shounak Sir, Good Morning!")
     elif 12 <= hour < 18:
+        playsound("/home/shounak/Downloads/Startup Sound.mp3")
         speak("Welcome back Shounak Sir, Good Afternoon!")
     else:
+        playsound("/home/shounak/Downloads/Startup Sound.mp3")
         speak("Welcome back Shounak Sir, Good Evening!")
 
 def play_spotify_playlist():
@@ -79,15 +86,20 @@ speak("Say 'hey man' to wake me up.")
 wakeup_command = "hey man"
 sleep_command = "exit"
 listening = False 
-while True:
-    command = take_command()
 
-    if listening:
+wakeup_command = "hey man"
+sleep_command = "exit"
+listening = False 
+
+def listen_for_commands():
+    global listening
+    while True:
+        command = take_command()
         if 'play' in command:
             song = command.replace('play', '')
             speak('playing ' + song)
             pywhatkit.playonyt(song)
-    
+
         elif 'time' in command:
             time = datetime.datetime.now().strftime('%I:%M %p')
             speak('Current time is ' + time)
@@ -121,14 +133,13 @@ while True:
         elif 'spotify' in command:    
             play_spotify_playlist()
 
-    
         elif 'open note' in command:
             speak("Just a sec opening gedit")
             os.system("gedit &")
         elif 'close note' in command:
             os.system("pkill gedit")
             speak("Gedit is closed")
-    
+
         elif 'open v s' in command:
             speak("Just a sec openning Visual Studio Code")
             os.system("code")
@@ -139,7 +150,6 @@ while True:
         elif 'open' in command:
             website = command.replace('open', '')
             webbrowser.open(website)
-
 
         elif 'finish' in command:
             speak("Goodbye!")
@@ -159,9 +169,13 @@ while True:
             speak("Going to sleep. Wake me up when you need assistance.")
             listening = False
 
-        else:
-            speak('Sorry,can you repeat it again!!')  
-    
-    if wakeup_command in command.lower():
-        speak("Hello Shounak, how can I help you?")
-        listening = True                 
+        if wakeup_command in command.lower():
+            speak("Hello Shounak, how can I help you?")
+            listening = True
+
+if __name__ == "__main__":
+    listen_for_commands()
+
+listening_thread = threading.Thread(target=listen_for_commands)
+listening_thread.daemon = True
+listening_thread.start()                 
