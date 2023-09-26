@@ -188,14 +188,14 @@ def listen_for_commands():
         elif "remind me" in command:
             rememberMsg = command.replace("remember that","")
             rememberMsg = rememberMsg.replace("mark","")
-            speak("you tell me to remind:" + rememberMsg)
+            speak("you tell me to remember:" + rememberMsg)
             remember = open("data.txt","w")
             remember.write(rememberMsg)
             remember.close()
 
         elif "what do you remember" in command:
             remember= open("data.txt","r")
-            speak("you tell me to remind"+remember.read())
+            speak("you tell me to remember"+remember.read())
 
         elif "news" in command:
             speak("reading news")
@@ -235,7 +235,7 @@ def listen_for_commands():
             r=requests.get(url)
             data=BeautifulSoup(r.text,"html.parser")
             temp=data.find("div",class_="BNeawe").text
-            speak(f"{search} is {temp}")
+            speak(f"{search} it is {temp}")
 
         elif "volume up" in command or "increase" in command:
             pyautogui.press("volumeup")
