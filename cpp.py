@@ -24,13 +24,6 @@ sys.path.append('/home/shounak/Documents/Fundamentals-of-ds/c_programs')
 
 from custom_voice import speak
 
-def animate_text(text):
-    colors = [Fore.RED, Fore.GREEN, Fore.YELLOW, Fore.BLUE, Fore.MAGENTA, Fore.CYAN]
-    styles = [Style.NORMAL, Style.BRIGHT]
-    
-    for style in styles:
-        for color in colors:
-            print(f"{style}{color}{text}")
 
 thread_lock = threading.Lock()
 
@@ -59,7 +52,7 @@ def take_command():
         pass
     return ""
 
-animate_text("Hello, I am ACE")
+
 
 def wishme():
     hour = datetime.datetime.now().hour
