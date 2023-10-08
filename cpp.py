@@ -35,7 +35,7 @@ with sr.Microphone() as source:
     recognizer.adjust_for_ambient_noise(source, duration=0.5)
 
 
-
+#Take command
 def take_command():
     try:
         with sr.Microphone() as source:            
@@ -54,6 +54,7 @@ def take_command():
 
 
 
+# Wishme
 def wishme():
     hour = datetime.datetime.now().hour
     if 0 <= hour < 12:
@@ -66,6 +67,7 @@ def wishme():
         playsound("/home/shounak/Downloads/Startup Sound.mp3")
         speak("Welcome back Shounak Sir, Good Evening!")
 
+# Spotify
 def play_spotify_playlist():
     try:
         subprocess.run(["spotify", "--uri", "https://open.spotify.com/playlist/2L8OHyMte0Msmt78ifX2SU?si=4fc854915d5b48d5"])
@@ -88,6 +90,7 @@ wakeup_command = "activate"
 sleep_command = "exit"
 listening = False 
 
+# Listenning to commands
 def listen_for_commands():
     global listening
     
