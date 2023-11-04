@@ -102,6 +102,10 @@ def listen_for_commands():
             speak('playing ' + song)
             pywhatkit.playonyt(song)
 
+        elif 'type' in query:
+            text = query.replace('type','')
+            pyautogui.typewrite(text)
+
         elif "hey woman" in command:
             speak("listening sir")
         
